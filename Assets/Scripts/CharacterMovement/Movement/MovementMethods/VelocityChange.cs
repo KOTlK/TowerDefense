@@ -22,6 +22,8 @@ namespace CharacterMovement.Movement
             _rigidbody = rigidbody;
         }
 
+        public Vector3 Position => _rigidbody.position;
+
         public void Move(Vector3 direction)
         {
             if (direction == Vector3.zero) return;

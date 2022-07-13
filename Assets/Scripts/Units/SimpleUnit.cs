@@ -1,17 +1,23 @@
-﻿using System.Collections;
+﻿using BananaParty.BehaviorTree;
 using CharacterMovement;
 using CharacterMovement.Movement;
+using Units.BehaviorTree;
+using Units.BehaviorTree.Variables;
 using UnityEngine;
 
 namespace Units
 {
-    public class SimpleUnit : MonoBehaviour, IMovable
+    public class SimpleUnit : MonoBehaviour
     {
         [SerializeField] private float _speed = 10f;
+        [SerializeField] private Vector3[] _navPoints;
+
+        private ITree _behavior;
+        private IMutableVariable<Vector3> _destination = new Destination();
+        private IMutableVariable<Vector3> _direction = new Direction();
         
         private Rigidbody _rigidbody;
         private AlongSurface _movement;
-        private Coroutine _moving = null;
 
         private void Awake()
         {
@@ -25,33 +31,40 @@ namespace Units
                     1),
                 new MovementAngle(
                     0f));
+
+            _behavior = new TreeEntry(
+                new RepeatNode(
+                    new SequenceNode(
+                        new IBehaviorNode[]
+                        {
+                            new RepeatNode(
+                                new SequenceNode(
+                                    new IBehaviorNode[]
+                                    {
+                                        new NextDestination(
+                                            _navPoints,
+                                            _destination),
+                                        new ParallelSequenceNode(
+                                            new IBehaviorNode[]
+                                            {
+                                                new RepeatNode(
+                                                    new InverterNode(
+                                                        new Move(
+                                                            _movement,
+                                                            _direction,
+                                                            _destination)),
+                                                    BehaviorNodeStatus.Failure)
+                                            })
+                                    }),
+                                BehaviorNodeStatus.Failure)
+                        }),
+                    BehaviorNodeStatus.Failure));
+
         }
 
-        public void Move(Vector3 point)
+        private void FixedUpdate()
         {
-            if (_moving != null) return;
-            _moving = StartCoroutine(Moving(point));
-        }
-
-        private IEnumerator Moving(Vector3 point)
-        {
-            Debug.Log("Movement Started");
-            
-            while (Close(_movement.Position, point, 0.1f) == false)
-            {
-                var direction = point - _rigidbody.position;
-                _movement.Move(direction.normalized);
-                yield return new WaitForFixedUpdate();
-            }
-
-            _moving = null;
-            Debug.Log("Movement Ended");
-        }
-
-        private bool Close(Vector3 first, Vector3 second, float distance)
-        {
-            var direction = second - first;
-            return direction.sqrMagnitude <= distance;
+            _behavior.Execute(Time.time);
         }
     }
 }

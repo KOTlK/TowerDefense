@@ -29,6 +29,8 @@ namespace CharacterMovement.Movement
             _speedDecay = speedDecay;
         }
 
+        public Vector3 Position => _origin.position;
+
         public void Move(Vector3 direction)
         {
             var results = new RaycastHit[1];
