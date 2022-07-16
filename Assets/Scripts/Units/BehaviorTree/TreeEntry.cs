@@ -11,9 +11,13 @@ namespace Units.BehaviorTree
             _entryNode = entryNode;
         }
 
+        /// <summary>
+        /// Executes tree
+        /// </summary>
+        /// <param name="time">Unity Time.time</param>
         public void Execute(float time)
         {
-            _entryNode.Execute((long) time);
+            _entryNode.Execute((long) (time * 1000));
         }
     }
 }

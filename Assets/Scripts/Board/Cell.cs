@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Game.Board
 {
-    public class Cell : MonoBehaviour, ICell
+    public class Cell : MonoBehaviour, IContentCell
     {
         [SerializeField] private float _outlineWidth = 0.1f;
         
@@ -11,40 +11,39 @@ namespace Game.Board
         private Material _material;
         private int _propertyID;
         private Bounds _bounds;
-        private Collider _collider;
         
-        private const string PropertyName = "_FirstOutlineWidth";
+        private const string OutlineProperty = "_FirstOutlineWidth";
 
-        public Vector3 Pivot => _collider.ClosestPointOnBounds(transform.position + new Vector3(0, _bounds.extents.y, 0)) ;
+        public Vector3 Pivot => transform.position + new Vector3(0, _bounds.extents.y, 0);
         public Vector3 Position => transform.position;
-        public IBuilding Building { get; private set; }
+        public ICellContent CellContent { get; private set; }
 
         private void Awake()
         {
-            _collider = GetComponent<Collider>();
-            _bounds = _collider.bounds;
-            _propertyID = Shader.PropertyToID(PropertyName);
+            var collider = GetComponent<Collider>();
+            _bounds = collider.bounds;
+            _propertyID = Shader.PropertyToID(OutlineProperty);
             
             _material = GetComponent<Renderer>().material;
         }
 
-        public void Initialize(IBuilding building)
+        public void Initialize(ICellContent cellContent)
         {
             if (_initialized) return;
 
-            Building = building;
+            CellContent = cellContent;
             _initialized = true;
         }
         
-        public void Build(IBuilding building)
+        public void Build(ICellContent cellContent)
         {
-            Building.Destroy();
-            Building = building;
+            CellContent.Destroy();
+            CellContent = cellContent;
         }
 
         public void DestroyBuilding()
         {
-            Building.Destroy();
+            CellContent.Destroy();
         }
 
         private void OnMouseEnter()

@@ -1,22 +1,27 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 namespace Game.Board
 {
-    public class CellGraph : IGraph<IVertex<ICell>>
+    public class CellGraph : IGraph<CellVertex>
     {
-        private readonly IVertex<ICell>[,] _vertices;
+        private readonly CellVertex[,] _vertices;
         
-        public CellGraph(IVertex<ICell>[,] vertices)
+        public CellGraph(CellVertex[,] vertices)
         {
             _vertices = vertices;
         }
 
-        public IVertex<ICell> this[int x, int y] => _vertices[x, y];
+        public CellVertex this[int x, int y] => _vertices[x, y];
 
-        public void Write(IVertex<ICell> vertex, Vector2Int position)
+        public void Write(CellVertex vertex, Vector2Int position)
         {
             _vertices[position.x, position.y] = vertex;
         }
-        
+
+        public IEnumerator GetEnumerator()
+        {
+            return _vertices.GetEnumerator();
+        }
     }
 }

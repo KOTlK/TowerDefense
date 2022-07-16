@@ -23,44 +23,50 @@ namespace Game.Board
 
         public PlayBoard Instantiate()
         {
-            var (vertices, cells) = InstantiateCells();
+            var vertices = InstantiateCells();
             
 
             for (var y = 0; y < _size.y; y++)
             {
                 for (var x = 0; x < _size.x; x++)
                 {
-                    var childs = new List<IVertex<ICell>>();
-
                     if (x == 0 && y == 0)
                     {
-                        childs.Add(vertices[1, 0]);
-                        childs.Add(vertices[0, 1]);
+                        var vertex = vertices[x, y];
+                        vertex.AddChild(vertices[x + 1, y]);
+                        vertices[x + 1, y].AddChild(vertex);
+                        vertex.AddChild(vertices[x, y + 1]);
+                        vertices[x, y + 1].AddChild(vertex);
                     }
                     else
                     {
+                        var vertex = vertices[x, y];
+                        
                         if (y < _size.y - 1)
                         {
-                            childs.Add(vertices[x, y + 1]);
+                            vertex.AddChild(vertices[x, y + 1]);
+                            vertices[x, y + 1].AddChild(vertex);
                         }
 
                         if (y > 0)
                         {
-                            childs.Add(vertices[x, y - 1]);
+                            vertex.AddChild(vertices[x, y - 1]);
+                            vertices[x, y - 1].AddChild(vertex);
                         }
 
                         if (x < _size.x - 1)
                         {
-                            childs.Add(vertices[x + 1, y]);
+                            vertex.AddChild(vertices[x + 1, y]);
+                            vertices[x + 1, y].AddChild(vertex);
                         }
 
                         if (x > 0)
                         {
-                            childs.Add(vertices[x - 1, y]);
+                            vertex.AddChild(vertices[x - 1, y]);
+                            vertices[x - 1, y].AddChild(vertex);
                         }
                     }
 
-                    vertices[x, y] = new CellVertex(cells[x, y], childs.ToArray());
                 }
             }
 
@@ -68,10 +74,10 @@ namespace Game.Board
             return new PlayBoard(new CellGraph(vertices));
         }
 
-        private (IVertex<ICell>[,], ICell[,]) InstantiateCells()
+        private CellVertex[,] InstantiateCells()
         {
             var cells = new ICell[_size.x, _size.y];
-            var vertices = new IVertex<ICell>[_size.x, _size.y];
+            var vertices = new CellVertex[_size.x, _size.y];
 
             for (var y = 0; y < _size.y; y++)
             {
@@ -101,7 +107,7 @@ namespace Game.Board
                 }
             }
 
-            return (vertices, cells);
+            return vertices;
         }
     }
 }

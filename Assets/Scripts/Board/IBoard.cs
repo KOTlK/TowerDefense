@@ -4,6 +4,6 @@ namespace Game.Board
 {
     public interface IBoard
     {
-        ICell Cell(Vector2Int position);
+        CellVertex Cell(Vector2Int position);
     }
 }

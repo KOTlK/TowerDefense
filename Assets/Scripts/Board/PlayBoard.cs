@@ -1,20 +1,25 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 
 namespace Game.Board
 {
-    public class PlayBoard : IBoard
+    public class PlayBoard : IBoard, IEnumerable
     {
+        private readonly IGraph<CellVertex> _graph;
 
-        private readonly IGraph<IVertex<ICell>> _graph;
-
-        public PlayBoard(IGraph<IVertex<ICell>> graph)
+        public PlayBoard(IGraph<CellVertex> graph)
         {
             _graph = graph;
         }
 
-        public ICell Cell(Vector2Int position)
+        public CellVertex Cell(Vector2Int position)
         {
-            return _graph[position.x, position.y].Origin;
+            return _graph[position.x, position.y];
+        }
+
+        public IEnumerator GetEnumerator()
+        {
+            return _graph.GetEnumerator();
         }
     }
 }

@@ -13,8 +13,8 @@ namespace Units
         [SerializeField] private Vector3[] _navPoints;
 
         private ITree _behavior;
-        private IMutableVariable<Vector3> _destination = new Destination();
-        private IMutableVariable<Vector3> _direction = new Direction();
+        private readonly IMutableVariable<Vector3> _destination = new Destination();
+        private readonly IMutableVariable<Vector3> _direction = new Direction();
         
         private Rigidbody _rigidbody;
         private AlongSurface _movement;

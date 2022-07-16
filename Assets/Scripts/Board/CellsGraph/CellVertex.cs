@@ -1,32 +1,26 @@
-﻿using System;
-using UnityEngine;
+﻿using System.Collections.Generic;
 
 namespace Game.Board
 {
-    public class CellVertex : IVertex<ICell>, ICell
+    public class CellVertex : IConstructableVertex<ICell>
     {
+        private readonly List<IVertex<ICell>> _childs;
         public CellVertex(ICell origin, IVertex<ICell>[] childs) : this(origin)
         {
-            Childs = childs;
+            _childs = new List<IVertex<ICell>>(childs);
         }
         public CellVertex(ICell origin)
         {
             Origin = origin;
-            Childs = Array.Empty<IVertex<ICell>>();
+            _childs = new List<IVertex<ICell>>();
         }
         
         public ICell Origin { get; }
-        public IVertex<ICell>[] Childs { get; private set; }
-        public Vector3 Pivot => Origin.Pivot;
-        public Vector3 Position => Origin.Position;
-        public IBuilding Building => Origin.Building;
-
-        public void Build(IBuilding building) => Origin.Build(building);
-        public void DestroyBuilding() => Origin.DestroyBuilding();
-        
-        public void WriteToGraph(IGraph<IVertex<ICell>> graph, Vector2Int position)
+        public IVertex<ICell>[] Childs => _childs.ToArray();
+        public void AddChild(IVertex<ICell> child)
         {
-            graph.Write(this, position);
+            if (_childs.Contains(child)) return;
+            _childs.Add(child);
         }
     }
 }

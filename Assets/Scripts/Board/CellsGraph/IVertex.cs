@@ -1,11 +1,8 @@
-﻿using UnityEngine;
-
-namespace Game.Board
+﻿namespace Game.Board
 {
-    public interface IVertex<T>
+    public interface IVertex<out T>
     {
         IVertex<T>[] Childs { get; }
-        ICell Origin { get; }
-        void WriteToGraph(IGraph<IVertex<T>> graph, Vector2Int position);
+        T Origin { get; }
     }
 }

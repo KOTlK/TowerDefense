@@ -6,8 +6,6 @@ namespace Game.Board
     {
         Vector3 Pivot { get; }
         Vector3 Position { get; }
-        IBuilding Building { get; }
-        void Build(IBuilding building);
-        void DestroyBuilding();
+        
     }
 }
