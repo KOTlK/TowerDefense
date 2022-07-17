@@ -4,7 +4,8 @@ namespace Pathfinding
 {
     public interface IPath
     {
-        IVertex<ICell> Current { get; }
-        bool Next();
+        IVertex<ICell> this[int index] { get; }
+        int Length { get; }
+        
     }
 }

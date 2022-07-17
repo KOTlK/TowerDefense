@@ -16,7 +16,7 @@ namespace Game.Board
 
         public Vector3 Pivot => transform.position + new Vector3(0, _bounds.extents.y, 0);
         public Vector3 Position => transform.position;
-        public ICellContent CellContent { get; private set; }
+        public ICellContent Content { get; private set; }
 
         private void Awake()
         {
@@ -31,19 +31,19 @@ namespace Game.Board
         {
             if (_initialized) return;
 
-            CellContent = cellContent;
+            Content = cellContent;
             _initialized = true;
         }
         
         public void Build(ICellContent cellContent)
         {
-            CellContent.Destroy();
-            CellContent = cellContent;
+            Content.Destroy();
+            Content = cellContent;
         }
 
         public void DestroyBuilding()
         {
-            CellContent.Destroy();
+            Content.Destroy();
         }
 
         private void OnMouseEnter()

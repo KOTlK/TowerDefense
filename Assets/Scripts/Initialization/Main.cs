@@ -1,8 +1,6 @@
-﻿using System.Diagnostics;
-using Game.Board;
-using Pathfinding;
+﻿using Game.Board;
+using Units;
 using UnityEngine;
-using Debug = UnityEngine.Debug;
 
 namespace Initialization
 {
@@ -26,16 +24,11 @@ namespace Initialization
             
             _board.Compose();
 
-            var pathfinding = new BreadthFirst(_board.Board);
-
-            var path = pathfinding.Find(_board.Board.Cell(new Vector2Int(0, 5)), _board.Board.Cell(new Vector2Int(9, 1)));
+            var unit = new UnitFactory(_board.Board).Instantiate();
 
 
-            while (path.Next())
-            {
-                Debug.DrawRay(path.Current.Origin.Position, Vector3.up * 2f, Color.blue, Mathf.Infinity);
-            }
-            
+
+
 
         }
         

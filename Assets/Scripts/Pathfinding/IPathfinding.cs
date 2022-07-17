@@ -1,9 +1,10 @@
-﻿using UnityEngine;
+﻿using Game.Board;
+using UnityEngine;
 
 namespace Pathfinding
 {
-    public interface IPathfinding<in TVertex>
+    public interface IPathfinding
     {
-        IPath Find(TVertex startVertex, TVertex endVertex);
+        IPath Find(IVertex<IContentCell> startVertex, IVertex<IContentCell> endVertex);
     }
 }

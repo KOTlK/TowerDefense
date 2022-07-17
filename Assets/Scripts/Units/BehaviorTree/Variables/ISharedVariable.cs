@@ -1,6 +1,6 @@
 ﻿namespace Units.BehaviorTree.Variables
 {
-    public interface IMutableVariable<T>
+    public interface ISharedVariable<T>
     {
         T Value { get; set; }
     }

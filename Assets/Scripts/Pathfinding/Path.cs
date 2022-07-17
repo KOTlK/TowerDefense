@@ -13,17 +13,9 @@ namespace Pathfinding
         {
             if (points == Array.Empty<IVertex<ICell>>()) throw new ArgumentException("Path can't be empty", nameof(points));
             _points = points;
-            _index = 0;
         }
 
-        public IVertex<ICell> Current => _points[_index];
-        
-        public bool Next()
-        {
-            if (_index + 1 == _points.Length) return false;
-
-            _index++;
-            return true;
-        }
+        public IVertex<ICell> this[int index] => _points[index];
+        public int Length => _points.Length;
     }
 }

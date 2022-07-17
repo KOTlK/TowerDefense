@@ -2,7 +2,7 @@
 {
     public interface IVertex<out T>
     {
-        IVertex<T>[] Childs { get; }
+        IVertex<T>[] Neighbours { get; }
         T Origin { get; }
     }
 }

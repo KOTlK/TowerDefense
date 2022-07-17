@@ -2,7 +2,7 @@
 {
     public interface IContentCell : ICell
     {
-        ICellContent CellContent { get; }
+        ICellContent Content { get; }
         void Build(ICellContent cellContent);
         void DestroyBuilding();
     }

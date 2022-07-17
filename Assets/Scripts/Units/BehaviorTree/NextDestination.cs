@@ -1,4 +1,5 @@
 ﻿using BananaParty.BehaviorTree;
+using Pathfinding;
 using Units.BehaviorTree.Variables;
 using UnityEngine;
 
@@ -6,30 +7,24 @@ namespace Units.BehaviorTree
 {
     public class NextDestination : BehaviorNode
     {
-        private readonly Vector3[] _navigationPoints;
-        private readonly IMutableVariable<Vector3> _destination;
-        private readonly IMutableVariable<Vector3> _direction;
+        private readonly ISharedVariable<IPath> _path;
+        private readonly ISharedVariable<Vector3> _destination;
 
-        private int _current = 0;
+        private int _index = 0;
 
-        public NextDestination(Vector3[] navigationPoints, IMutableVariable<Vector3> destination)
+        public NextDestination(ISharedVariable<IPath> path, ISharedVariable<Vector3> destination)
         {
-            _navigationPoints = navigationPoints;
+            _path = path;
             _destination = destination;
         }
-
-
+        
         public override BehaviorNodeStatus OnExecute(long time)
         {
-            if (_navigationPoints.Length < _current)
-            {
-                _destination.Value = Vector3.zero;
-                _direction.Value = Vector3.zero;
-                return BehaviorNodeStatus.Failure;
-            }
-            
-            _destination.Value = _navigationPoints[_current];
-            _current++;
+            if (_index + 1 == _path.Value.Length) return BehaviorNodeStatus.Failure;
+            _index++;
+            _destination.Value = _path.Value[_index].Origin.Pivot;
+            Debug.Log("Called next destination");
+            Debug.DrawRay(_destination.Value, Vector3.up * 5f, Color.blue, Mathf.Infinity);
             return BehaviorNodeStatus.Success;
         }
     }

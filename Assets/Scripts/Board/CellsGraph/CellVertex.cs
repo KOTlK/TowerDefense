@@ -2,25 +2,25 @@
 
 namespace Game.Board
 {
-    public class CellVertex : IConstructableVertex<ICell>
+    public class CellVertex : IConstructableVertex<IContentCell>
     {
-        private readonly List<IVertex<ICell>> _childs;
-        public CellVertex(ICell origin, IVertex<ICell>[] childs) : this(origin)
+        private readonly List<IVertex<IContentCell>> _neighbours;
+        public CellVertex(IContentCell origin, IVertex<IContentCell>[] neighbours) : this(origin)
         {
-            _childs = new List<IVertex<ICell>>(childs);
+            _neighbours = new List<IVertex<IContentCell>>(neighbours);
         }
-        public CellVertex(ICell origin)
+        public CellVertex(IContentCell origin)
         {
             Origin = origin;
-            _childs = new List<IVertex<ICell>>();
+            _neighbours = new List<IVertex<IContentCell>>();
         }
         
-        public ICell Origin { get; }
-        public IVertex<ICell>[] Childs => _childs.ToArray();
-        public void AddChild(IVertex<ICell> child)
+        public IContentCell Origin { get; }
+        public IVertex<IContentCell>[] Neighbours => _neighbours.ToArray();
+        public void AddNeighbour(IVertex<IContentCell> child)
         {
-            if (_childs.Contains(child)) return;
-            _childs.Add(child);
+            if (_neighbours.Contains(child)) return;
+            _neighbours.Add(child);
         }
     }
 }

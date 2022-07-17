@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 using Game.Board;
-using UnityEngine;
 
 namespace Pathfinding
 {
-    public class BreadthFirst : IPathfinding<IVertex<ICell>>
+    public class BreadthFirst : IPathfinding
     {
         private readonly IBoard _board;
 
@@ -14,19 +13,25 @@ namespace Pathfinding
             _board = board;
         }
 
-        public IPath Find(IVertex<ICell> startVertex, IVertex<ICell> endVertex)
+        
+        public IPath Find(IVertex<IContentCell> startVertex, IVertex<IContentCell> endVertex)
         {
-            var frontier = new Queue<IVertex<ICell>>();
+            if (startVertex.Origin.Content is ICellContent.Empty == false)
+                throw new ArgumentException($"{nameof(startVertex)} should be {nameof(ICellContent.Empty)}");
+
+            if (endVertex.Origin.Content is ICellContent.Empty == false)
+                throw new ArgumentException($"{nameof(endVertex)} should be {nameof(ICellContent.Empty)}");
+            
+            var frontier = new Queue<IVertex<IContentCell>>();
             frontier.Enqueue(startVertex);
-            var cameFrom = new Dictionary<IVertex<ICell>, IVertex<ICell>> {{startVertex, null}};
+            var cameFrom = new Dictionary<IVertex<IContentCell>, IVertex<IContentCell>> {{startVertex, null}};
 
             while (frontier.Count != 0)
             {
                 var current = frontier.Dequeue();
-                //Debug.DrawRay(current.Origin.Position, Vector3.up * 5f, Color.red, Mathf.Infinity);
-                foreach (var child in current.Childs)
+                foreach (var child in current.Neighbours)
                 {
-                    //Debug.DrawRay(child.Origin.Position, Vector3.up * 2f, Color.blue, Mathf.Infinity);
+                    if (child.Origin.Content is ICellContent.Empty == false) continue;
                     if (cameFrom.ContainsKey(child) == false)
                     {
                         frontier.Enqueue(child);

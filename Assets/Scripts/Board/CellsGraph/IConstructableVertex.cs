@@ -2,6 +2,6 @@
 {
     public interface IConstructableVertex<T> : IVertex<T>
     {
-        void AddChild(IVertex<T> child);
+        void AddNeighbour(IVertex<T> child);
     }
 }

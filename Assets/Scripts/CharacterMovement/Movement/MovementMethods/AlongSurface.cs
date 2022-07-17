@@ -9,6 +9,7 @@ namespace CharacterMovement.Movement
         private readonly MovementAngle _angleValidator;
         private readonly ISpeed _speed;
 
+        private Vector3 _normal;
 
         public AlongSurface(Rigidbody body, ISpeed speed, IRaycast castMethod, MovementAngle angleValidator)
         {
@@ -25,9 +26,18 @@ namespace CharacterMovement.Movement
             if (direction == Vector3.zero) return;
 
             var contacts = _raycast.Cast(_origin.position + direction * _speed.Current * Time.deltaTime, Vector3.down);
-
             var normal = contacts.Normal;
-            Position = contacts.Point;
+            
+            if (contacts == Rayhit.None)
+            {
+                normal = _normal;
+            }
+            else
+            {
+                _normal = normal;
+                Position = contacts.Point;
+            }
+            
 
             if (_angleValidator.IsValid(direction, normal) == false) return;
 

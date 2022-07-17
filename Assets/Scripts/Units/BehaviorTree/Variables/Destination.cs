@@ -2,7 +2,7 @@
 
 namespace Units.BehaviorTree.Variables
 {
-    public class Destination : IMutableVariable<Vector3>
+    public class Destination : ISharedVariable<Vector3>
     {
         public Destination() : this(Vector3.zero){}
         public Destination(Vector3 value)

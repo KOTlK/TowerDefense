@@ -33,10 +33,10 @@ namespace Game.Board
                     if (x == 0 && y == 0)
                     {
                         var vertex = vertices[x, y];
-                        vertex.AddChild(vertices[x + 1, y]);
-                        vertices[x + 1, y].AddChild(vertex);
-                        vertex.AddChild(vertices[x, y + 1]);
-                        vertices[x, y + 1].AddChild(vertex);
+                        vertex.AddNeighbour(vertices[x + 1, y]);
+                        vertices[x + 1, y].AddNeighbour(vertex);
+                        vertex.AddNeighbour(vertices[x, y + 1]);
+                        vertices[x, y + 1].AddNeighbour(vertex);
                     }
                     else
                     {
@@ -44,26 +44,26 @@ namespace Game.Board
                         
                         if (y < _size.y - 1)
                         {
-                            vertex.AddChild(vertices[x, y + 1]);
-                            vertices[x, y + 1].AddChild(vertex);
+                            vertex.AddNeighbour(vertices[x, y + 1]);
+                            vertices[x, y + 1].AddNeighbour(vertex);
                         }
 
                         if (y > 0)
                         {
-                            vertex.AddChild(vertices[x, y - 1]);
-                            vertices[x, y - 1].AddChild(vertex);
+                            vertex.AddNeighbour(vertices[x, y - 1]);
+                            vertices[x, y - 1].AddNeighbour(vertex);
                         }
 
                         if (x < _size.x - 1)
                         {
-                            vertex.AddChild(vertices[x + 1, y]);
-                            vertices[x + 1, y].AddChild(vertex);
+                            vertex.AddNeighbour(vertices[x + 1, y]);
+                            vertices[x + 1, y].AddNeighbour(vertex);
                         }
 
                         if (x > 0)
                         {
-                            vertex.AddChild(vertices[x - 1, y]);
-                            vertices[x - 1, y].AddChild(vertex);
+                            vertex.AddNeighbour(vertices[x - 1, y]);
+                            vertices[x - 1, y].AddNeighbour(vertex);
                         }
                     }
 

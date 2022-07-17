@@ -1,6 +1,8 @@
 ﻿using BananaParty.BehaviorTree;
 using CharacterMovement;
 using CharacterMovement.Movement;
+using Game.Board;
+using Pathfinding;
 using Units.BehaviorTree;
 using Units.BehaviorTree.Variables;
 using UnityEngine;
@@ -10,20 +12,19 @@ namespace Units
     public class SimpleUnit : MonoBehaviour
     {
         [SerializeField] private float _speed = 10f;
-        [SerializeField] private Vector3[] _navPoints;
 
         private ITree _behavior;
-        private readonly IMutableVariable<Vector3> _destination = new Destination();
-        private readonly IMutableVariable<Vector3> _direction = new Direction();
-        
-        private Rigidbody _rigidbody;
+        private readonly ISharedVariable<Vector3> _destination = new Destination();
+        private readonly ISharedVariable<Vector3> _direction = new Direction();
+        private readonly ISharedVariable<IPath> _path = new BehaviorTree.Variables.Path();
+
         private AlongSurface _movement;
 
-        private void Awake()
+        public void Init(IBoard board)
         {
-            _rigidbody = GetComponent<Rigidbody>();
+            var rigidbody = GetComponent<Rigidbody>();
             _movement = new AlongSurface(
-                _rigidbody,
+                rigidbody,
                 new Speed(
                     _speed),
                 new IRaycast.Default(
@@ -33,32 +34,43 @@ namespace Units
                     0f));
 
             _behavior = new TreeEntry(
-                new RepeatNode(
-                    new SequenceNode(
-                        new IBehaviorNode[]
-                        {
-                            new RepeatNode(
-                                new SequenceNode(
-                                    new IBehaviorNode[]
-                                    {
-                                        new NextDestination(
-                                            _navPoints,
-                                            _destination),
-                                        new ParallelSequenceNode(
+                new SequenceNode(
+                    new IBehaviorNode[]
+                    {
+                        new FindPath(
+                            _path,
+                            new BreadthFirst(
+                                board),
+                            board.Cell(new Vector2Int(0, 0)),
+                            board.Cell(new Vector2Int(9, 9))),
+                        new RepeatNode(
+                            new SequenceNode(
+                                new IBehaviorNode[]
+                                {
+                                    new RepeatNode(
+                                        new SequenceNode(
                                             new IBehaviorNode[]
                                             {
-                                                new RepeatNode(
-                                                    new InverterNode(
-                                                        new Move(
-                                                            _movement,
-                                                            _direction,
-                                                            _destination)),
-                                                    BehaviorNodeStatus.Failure)
-                                            })
-                                    }),
-                                BehaviorNodeStatus.Failure)
-                        }),
-                    BehaviorNodeStatus.Failure));
+                                                new NextDestination(
+                                                    _path,
+                                                    _destination),
+                                                new ParallelSequenceNode(
+                                                    new IBehaviorNode[]
+                                                    {
+                                                        new RepeatNode(
+                                                            new InverterNode(
+                                                                new Move(
+                                                                    _movement,
+                                                                    _direction,
+                                                                    _destination)),
+                                                            BehaviorNodeStatus.Failure)
+                                                    })
+                                            }),
+                                        BehaviorNodeStatus.Failure)
+                                }),
+                            BehaviorNodeStatus.Failure)
+                    }));
+
 
         }
 
