@@ -23,7 +23,6 @@ namespace Units.BehaviorTree
             if (_index + 1 == _path.Value.Length) return BehaviorNodeStatus.Failure;
             _index++;
             _destination.Value = _path.Value[_index].Origin.Pivot;
-            Debug.Log("Called next destination");
             Debug.DrawRay(_destination.Value, Vector3.up * 5f, Color.blue, Mathf.Infinity);
             return BehaviorNodeStatus.Success;
         }

@@ -1,11 +1,14 @@
 ﻿using Game.Board;
+using Game.Weapon;
 using Units;
 using UnityEngine;
+using Utils;
 
 namespace Initialization
 {
     public class Main : MonoBehaviour
     {
+        [SerializeField] private Transform _projectilesParent;
         [SerializeField] private Cell _cellPrefab;
         [SerializeField] private Vector2Int _boardSize;
 
@@ -24,7 +27,11 @@ namespace Initialization
             
             _board.Compose();
 
-            var unit = new UnitFactory(_board.Board).Instantiate();
+            var plasmaPool = new PlasmaPool(
+                new PlasmaFactory(
+                    _projectilesParent));
+
+            var unit = new UnitFactory(_board.Board, plasmaPool).Instantiate();
 
 
 

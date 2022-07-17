@@ -2,10 +2,12 @@
 using CharacterMovement;
 using CharacterMovement.Movement;
 using Game.Board;
+using Game.Weapon;
 using Pathfinding;
 using Units.BehaviorTree;
 using Units.BehaviorTree.Variables;
 using UnityEngine;
+using Utils;
 
 namespace Units
 {
@@ -19,8 +21,9 @@ namespace Units
         private readonly ISharedVariable<IPath> _path = new BehaviorTree.Variables.Path();
 
         private AlongSurface _movement;
+        private IWeapon _weapon;
 
-        public void Init(IBoard board)
+        public void Init(IBoard board, IObjectPool<IProjectile> pool)
         {
             var rigidbody = GetComponent<Rigidbody>();
             _movement = new AlongSurface(
@@ -32,6 +35,11 @@ namespace Units
                     1),
                 new MovementAngle(
                     0f));
+
+            _weapon = new PlasmaGun(
+                pool,
+                transform,
+                2000);
 
             _behavior = new TreeEntry(
                 new SequenceNode(
@@ -63,6 +71,18 @@ namespace Units
                                                                     _movement,
                                                                     _direction,
                                                                     _destination)),
+                                                            BehaviorNodeStatus.Failure),
+                                                        new RepeatNode(
+                                                            new SequenceNode(
+                                                                new IBehaviorNode[]
+                                                                {
+                                                                    new Shoot(
+                                                                        _weapon,
+                                                                        _direction),
+                                                                    new WaitNode(
+                                                                        _weapon.Cooldown
+                                                                        )
+                                                                }),
                                                             BehaviorNodeStatus.Failure)
                                                     })
                                             }),
