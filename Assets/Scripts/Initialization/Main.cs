@@ -1,10 +1,12 @@
 ﻿using Game.Board;
+using Game.Board.Content;
+using Game.Hp.View;
 using Game.Weapon;
 using Units;
 using UnityEngine;
 using Utils;
 
-namespace Initialization
+namespace Game.Initialization
 {
     public class Main : MonoBehaviour
     {
@@ -32,7 +34,9 @@ namespace Initialization
                     _projectilesParent));
 
             var unit = new UnitFactory(_board.Board, plasmaPool).Instantiate();
-
+            var tower = new TowerFactory(
+                new HpView().Instantiate()).Instantiate();
+            _board.Board.Cell(new Vector2Int(9, 5)).Origin.Build(tower);
 
 
 

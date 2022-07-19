@@ -1,6 +1,6 @@
 ﻿using Game.Board;
 
-namespace Initialization
+namespace Game.Initialization
 {
     public class BoardRoot : ICompositeRoot
     {

@@ -39,6 +39,7 @@ namespace Game.Board
         {
             Content.Destroy();
             Content = cellContent;
+            Content.Place(Pivot);
         }
 
         public void DestroyBuilding()

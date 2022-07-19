@@ -1,13 +1,15 @@
-﻿namespace Game.Board
+﻿using UnityEngine;
+
+namespace Game.Board
 {
     public interface ICellContent
     {
-        void Execute(long time);
+        void Place(Vector3 position);
         void Destroy();
 
         public class Empty : ICellContent
         {
-            public void Execute(long time){}
+            public void Place(Vector3 position){}
             public void Destroy(){}
         }
     }

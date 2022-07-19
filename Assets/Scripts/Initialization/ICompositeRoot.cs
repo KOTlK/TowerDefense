@@ -1,4 +1,4 @@
-﻿namespace Initialization
+﻿namespace Game.Initialization
 {
     public interface ICompositeRoot
     {
