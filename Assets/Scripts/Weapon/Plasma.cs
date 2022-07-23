@@ -22,14 +22,15 @@ namespace Game.Weapon
             _rigidbody.isKinematic = true;
         }
 
-        private void OnCollisionEnter(Collision other)
+        private void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.TryGetComponent(out IDamageable damageable))
+            if (other.TryGetComponent(out IDamageable damageable))
             {
                 damageable.ApplyDamage(_damage);
                 Deactivate();
             }
         }
+
 
         public void Shoot(Vector3 startPosition, Vector3 direction)
         {

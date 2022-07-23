@@ -4,7 +4,6 @@ using Game.Hp.View;
 using Game.Weapon;
 using Units;
 using UnityEngine;
-using Utils;
 
 namespace Game.Initialization
 {
@@ -35,12 +34,9 @@ namespace Game.Initialization
 
             var unit = new UnitFactory(_board.Board, plasmaPool).Instantiate();
             var tower = new TowerFactory(
-                new HpView().Instantiate()).Instantiate();
-            _board.Board.Cell(new Vector2Int(9, 5)).Origin.Build(tower);
-
-
-
-
+                new HpView().Instantiate(),
+                plasmaPool).Instantiate();
+            _board.Board.Cell(new Vector2Int(4, 4)).Origin.Build(tower);
         }
         
     }

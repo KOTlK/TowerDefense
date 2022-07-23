@@ -1,7 +1,9 @@
-﻿using BananaParty.BehaviorTree;
+﻿using System;
+using BananaParty.BehaviorTree;
 using CharacterMovement;
 using CharacterMovement.Movement;
 using Game.Board;
+using Game.Hp;
 using Game.Weapon;
 using Pathfinding;
 using Units.BehaviorTree;
@@ -11,9 +13,12 @@ using Utils;
 
 namespace Units
 {
-    public class SimpleUnit : MonoBehaviour
+    public class SimpleUnit : MonoBehaviour, IUnit
     {
+        public event Action Died;
+        
         [SerializeField] private float _speed = 10f;
+        [SerializeField] private float _maxHealth = 100f;
 
         private ITree _behavior;
         private readonly ISharedVariable<Vector3> _destination = new Destination();
@@ -22,9 +27,15 @@ namespace Units
 
         private AlongSurface _movement;
         private IWeapon _weapon;
+        private IHealth _health;
 
+        public Vector3 Position => transform.position;
+        
         public void Init(IBoard board, IObjectPool<IProjectile> pool)
         {
+            _health = new Health(_maxHealth);
+            _health.Changed += Die;
+            
             var rigidbody = GetComponent<Rigidbody>();
             _movement = new AlongSurface(
                 rigidbody,
@@ -94,9 +105,34 @@ namespace Units
 
         }
 
+        public Vector3 PredictPosition(float time)
+        {
+            return transform.position + _direction.Value * time * _speed;
+        }
+
+        public void ApplyDamage(float amount)
+        {
+            Debug.Log($"Damage taken - {amount}");
+            _health.Lose(amount);
+        }
+        
         private void FixedUpdate()
         {
             _behavior.Execute(Time.time);
+        }
+
+        private void OnDisable()
+        {
+            _health.Changed -= Die;
+        }
+
+        private void Die(float amount)
+        {
+            if (amount <= 0)
+            {
+                gameObject.SetActive(false);
+                Died?.Invoke();
+            }
         }
     }
 }
