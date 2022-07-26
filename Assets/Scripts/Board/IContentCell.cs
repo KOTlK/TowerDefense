@@ -1,9 +1,9 @@
 ﻿namespace Game.Board
 {
-    public interface IContentCell : ICell
+    public interface IContentCell : ICell, IClickableCell, ISelectableCell
     {
-        ICellContent Content { get; }
-        void Build(ICellContent cellContent);
-        void DestroyBuilding();
+        IContent Content { get; }
+        void Build(IContent content);
+        void DestroyContent();
     }
 }

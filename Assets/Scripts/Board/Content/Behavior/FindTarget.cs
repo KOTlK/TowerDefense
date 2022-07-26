@@ -25,7 +25,6 @@ namespace Game.Board.Content.Behavior
 
         public override BehaviorNodeStatus OnExecute(long time)
         {
-            Debug.Log(_target.Value);
             if (_target.Value != null) return BehaviorNodeStatus.Failure;
             var results = new Collider[160];
             if (Physics.OverlapSphereNonAlloc(_origin.position, _radius, results) == 0)

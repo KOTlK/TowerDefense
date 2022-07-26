@@ -12,7 +12,7 @@ using Shoot = Game.Board.Content.Behavior.Shoot;
 
 namespace Game.Board.Content
 {
-    public class Tower : MonoBehaviour, IDamageable, ICellContent
+    public class Tower : MonoBehaviour, IDamageable, IContent
     {
         [SerializeField] private Transform _bulletsPivot;
         [SerializeField] private int _gunCooldownInMs = 2000;

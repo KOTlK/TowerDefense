@@ -5,6 +5,9 @@ namespace Game.Board
 {
     public class Cell : MonoBehaviour, IContentCell
     {
+        public event Action Clicked;
+        public event Action Selected;
+        
         [SerializeField] private float _outlineWidth = 0.1f;
         
         private bool _initialized = false;
@@ -16,7 +19,7 @@ namespace Game.Board
 
         public Vector3 Pivot => transform.position + new Vector3(0, _bounds.extents.y, 0);
         public Vector3 Position => transform.position;
-        public ICellContent Content { get; private set; }
+        public IContent Content { get; private set; }
 
         private void Awake()
         {
@@ -27,34 +30,40 @@ namespace Game.Board
             _material = GetComponent<Renderer>().material;
         }
 
-        public void Initialize(ICellContent cellContent)
+        public void Initialize(IContent content)
         {
             if (_initialized) return;
 
-            Content = cellContent;
+            Content = content;
             _initialized = true;
         }
         
-        public void Build(ICellContent cellContent)
+        public void Build(IContent content)
         {
             Content.Destroy();
-            Content = cellContent;
+            Content = content;
             Content.Place(Pivot);
         }
 
-        public void DestroyBuilding()
+        public void DestroyContent()
         {
             Content.Destroy();
         }
 
         private void OnMouseEnter()
         {
+            Selected?.Invoke();
             _material.SetFloat(_propertyID, _outlineWidth);
         }
 
         private void OnMouseExit()
         {
             _material.SetFloat(_propertyID, 0);
+        }
+
+        private void OnMouseDown()
+        {
+            Clicked?.Invoke();
         }
     }
 }
